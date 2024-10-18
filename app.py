@@ -7,6 +7,6 @@ def start():
     return render_template('index.html',title="Build Anything with Themebook", name="Jay")
 
 @app.route("/product")
-def mbsa():
+def product():
     return render_template('product.html')
 
