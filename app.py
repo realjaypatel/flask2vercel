@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def start():
-    return render_template('index.html',title="Build Anything with Themebook", name="Jay")
+    return render_template('index.html',title="Get Everything on Onelink", name="Jay")
 
 @app.route("/product")
 def product():
