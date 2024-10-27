@@ -22,6 +22,15 @@ def custom_static(filename):
 
 @app.route("/")
 def start():
+    try:
+        # Fetch the specific submission by ID
+        data1 = []
+        data2 = []
+        data1 = collection.find_one({"category": 'Template'})
+        data2 = collection.find_one({"category": 'Google Drive'})
+        return render_template('home.html',title="Get Templates, Drive Links, Websites, Everything on Onelink", data1=data1,data2=data2)
+    except Exception:
+        return "404"
     return render_template('home.html',title="Get Everything on Onelink", name="Jay")
 
 @app.route("/link/<link_id>")
@@ -31,7 +40,11 @@ def product(link_id):
         data = collection.find_one({"onelinkid": int(link_id)})
         print('data',data)
         if not data:
-            return "404"  
+            return "404"
+        if not (".jpg" in data['img'] or ".png" in data['img'] or ".webp" in data['img']):
+            data['img'] = 'https://images.unsplash.com/photo-1506465139073-93b61c0d4795?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHN0cmVldCUyMHJvYWR8ZW58MHx8MHx8fDA%3D'
+
+
         return render_template('product.html',data=data)
     except Exception:
         return "404"
