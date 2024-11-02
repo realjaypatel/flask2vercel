@@ -1,10 +1,37 @@
-from flask import Flask, render_template
-
+from flask import Flask, render_template, send_from_directory,request, redirect
+from pymongo import MongoClient
+from routes import add, home, product
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+# MongoDB setup
+client = MongoClient("mongodb+srv://user:user@cluster0.u3fdtma.mongodb.net/")  # Update this URI if your MongoDB setup is different
+db = client["onelink"]  # Database name
+collection = db["onelink"]  # Collection name
+
+
+
+
+
+@app.route('/public/<path:filename>')
+def custom_static(filename):
+    return send_from_directory('assets', filename)
+
+
+
+
 
 @app.route("/")
 def start():
-    return render_template('index.html',title="Build Anything with Themebook", name="Jay")
+    try:
+        # Fetch the specific submission by ID
+        data1 = []
+        data2 = []
+        data1 = collection.find_one({"category": 'Template'})
+        data2 = collection.find_one({"category": 'Google Drive'})
+        return render_template('home.html',title="Get Templates, Drive Links, Websites, Everything on Onelink", data1=data1,data2=data2)
+    except Exception:
+        return "404"
+    return render_template('home.html',title="Get Everything on Onelink", name="Jay")
 
 @app.route("/link/<link_id>")
 def product(link_id):
